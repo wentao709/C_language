@@ -1,0 +1,16 @@
+@addPages myPage UofA csDept localTheater
+@addLinks myPage UofA
+@addLinks UofA csDept
+@addLinks csDept localTheater
+@addPages TucsonHome ComicsStore
+@addLinks TucsonHome localTheater UofA
+@addLinks UofA myPage localTheater TucsonHome
+@addPages @addPages 8 1 6 3 4
+@addLinks 3 6 1 8
+@addLinks p p 1 p p p p
+@addLinks @addPages 1
+@isConnected 3 6
+@isConnected 6 1
+@isConnected 1 4
+@isConnected 1 1
+@isConnected @addPages 1

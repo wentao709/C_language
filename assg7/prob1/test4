@@ -1,0 +1,3 @@
+@addPages 1 2 3 4
+@addLinks 1 3 4 1
+@isConnected 1 2

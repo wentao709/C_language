@@ -1,0 +1,230 @@
+        -:    0:Source:linked.c
+        -:    0:Graph:linked.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    0:Programs:0
+        -:    1:# include<stdio.h>
+        -:    2:# include<stdlib.h>
+        -:    3:# include<string.h>
+        -:    4:
+        -:    5:
+        -:    6:struct page{
+        -:    7:  char *name;
+        -:    8:  int visited;
+        -:    9:  struct page *down; // next node
+        -:   10:  struct link *links;
+        -:   11:};
+        -:   12:
+        -:   13:struct link{
+        -:   14:  struct page *pages;
+        -:   15:  struct link *next;
+        -:   16:};
+        -:   17:
+        -:   18:int getCommand(char *command){
+        -:   19:  int length;
+    #####:   20:  for (length = 0; command[length]!='\0' ;length++){}
+    #####:   21:  if (length == 9){
+    #####:   22:    if (command[0] == '@' && command[1] == 'a' && command[2] == 'd' && command[3] == 'd' &&
+    #####:   23:        command[4] == 'P' && command[5] == 'a' && command[6] == 'g' && command[7] == 'e' &&
+    #####:   24:        command[8] == 's'){
+    #####:   25:          return 1;
+    #####:   26:    }else if(command[0] == '@' && command[1] == 'a' && command[2] == 'd' && command[3] == 'd' &&
+    #####:   27:        command[4] == 'L' && command[5] == 'i' && command[6] == 'n' && command[7] == 'k' &&
+    #####:   28:        command[8] == 's'){
+    #####:   29:          return 2;
+        -:   30:    }
+    #####:   31:  }else if(length == 12){
+    #####:   32:    if (command[0] == '@' && command[1] == 'i' && command[2] == 's' && command[3] == 'C' &&
+    #####:   33:        command[4] == 'o' && command[5] == 'n' && command[6] == 'n' && command[7] == 'e' &&
+    #####:   34:        command[8] == 'c' && command[9] == 't' && command[10] == 'e' && command[11] == 'd'){
+    #####:   35:        return 3;
+        -:   36:    }
+    #####:   37:  }
+    #####:   38:  return 0;
+    #####:   39:}
+        -:   40:
+        -:   41:struct page *list_hd;
+        -:   42:
+        -:   43:void addPages(char *pageName){
+        -:   44:  struct page *tmpPage;
+    #####:   45:  tmpPage = malloc(sizeof(struct page));
+    #####:   46:  if (tmpPage == NULL){
+    #####:   47:    fprintf(stderr, "out of memory\n");
+    #####:   48:    exit(1);
+        -:   49:  }
+    #####:   50:  tmpPage -> name = strdup(pageName);
+    #####:   51:  tmpPage -> visited = 0;
+    #####:   52:  tmpPage -> links = NULL;
+    #####:   53:  tmpPage -> down = list_hd;
+    #####:   54:  list_hd = tmpPage;
+    #####:   55:}
+        -:   56:
+        -:   57:int compareString(char *source, char *name){
+    #####:   58:  int length1 = 0;
+    #####:   59:  int length2 = 0;
+    #####:   60:  for(length1 = 0; source[length1] != '\0'; length1++){}
+    #####:   61:  for(length2 = 0; source[length2] != '\0'; length2++){}
+    #####:   62:  if (length1 == length2){
+        -:   63:    int i;
+    #####:   64:    for (i = 0; source[i]!='\0' ;i++){
+    #####:   65:      if (source[i] != name[i]){
+    #####:   66:        return 0;
+        -:   67:      }
+    #####:   68:    }
+    #####:   69:    return 1;
+        -:   70:  }
+    #####:   71:  return 0;
+    #####:   72:}
+        -:   73:
+        -:   74:void connectPages(char *sourcePage, char *string){
+        -:   75:  struct page *tmpNode, *source;
+    #####:   76:  tmpNode = malloc(sizeof(struct page));
+    #####:   77:  source = malloc(sizeof(struct page));
+        -:   78:  struct page *tmpTo;
+    #####:   79:  tmpTo = malloc(sizeof(struct page));
+        -:   80:  struct link *tmpLinks;
+    #####:   81:  tmpLinks = malloc(sizeof(struct link));
+    #####:   82:  tmpNode = list_hd;
+    #####:   83:  while(tmpNode != NULL){
+    #####:   84:    if (compareString(tmpNode -> name, sourcePage)){
+    #####:   85:      source = tmpNode;
+    #####:   86:      break;
+        -:   87:    }
+    #####:   88:    tmpNode = tmpNode -> down;
+        -:   89:  }
+    #####:   90:  tmpNode = list_hd;
+    #####:   91:  while(tmpNode != NULL){
+    #####:   92:    if (compareString(tmpNode -> name, string)){
+    #####:   93:      tmpTo = tmpNode;
+    #####:   94:      break;
+        -:   95:    }
+    #####:   96:    tmpNode = tmpNode -> down;
+        -:   97:  }
+    #####:   98:  tmpLinks -> pages = tmpTo;
+    #####:   99:  tmpLinks -> next = NULL;
+    #####:  100:  if(source -> links  == NULL){
+    #####:  101:    source -> links = tmpLinks;
+    #####:  102:  }else{
+    #####:  103:    struct link *moveLink = malloc(sizeof(struct link));
+    #####:  104:    moveLink = source -> links;
+    #####:  105:    while(moveLink -> next != NULL){
+        -:  106:      //printf("%s\n", moveLink -> pages -> name);
+    #####:  107:      moveLink  = moveLink  -> next;
+        -:  108:    }
+    #####:  109:    moveLink -> next  = tmpLinks;
+        -:  110:  }
+    #####:  111:}
+        -:  112:
+        -:  113:void setVisit(){
+    #####:  114:  struct page *tmpPage = malloc(sizeof(struct page));
+    #####:  115:  tmpPage = list_hd;
+    #####:  116:  while(tmpPage != NULL){
+    #####:  117:    tmpPage -> visited = 0;
+    #####:  118:    tmpPage = tmpPage -> down;
+        -:  119:  }
+    #####:  120:}
+        -:  121:
+        -:  122:int Dfs(struct page *midPage, struct page *toPage){
+    #####:  123:  if (compareString(midPage -> name, toPage -> name)){
+    #####:  124:    return 1;
+        -:  125:  }
+    #####:  126:  if (midPage -> visited){
+    #####:  127:    return 0;
+        -:  128:  }
+    #####:  129:  midPage -> visited = 1;
+    #####:  130:  struct link *nextLink = malloc(sizeof(struct link));
+    #####:  131:  nextLink = midPage -> links;
+    #####:  132:  while(nextLink != NULL){
+    #####:  133:    if(Dfs(nextLink -> pages, toPage)){
+    #####:  134:      return 1;
+        -:  135:    }
+    #####:  136:    nextLink = nextLink -> next;
+        -:  137:  }
+    #####:  138:  return 0;
+    #####:  139:}
+        -:  140:
+        -:  141:int dfs(char *page1, char *page2){
+    #####:  142:  if (compareString(page1, page2)){
+    #####:  143:    return 1;
+        -:  144:  }
+        -:  145:  struct page *fromPage, *toPage, *tmpNode;
+    #####:  146:  fromPage = malloc(sizeof(struct page));
+    #####:  147:  toPage = malloc(sizeof(struct page));
+    #####:  148:  tmpNode = malloc(sizeof(struct page));
+    #####:  149:  tmpNode = list_hd;
+    #####:  150:  while(tmpNode != NULL){
+    #####:  151:    if (compareString(tmpNode -> name, page1)){
+    #####:  152:      fromPage = tmpNode;
+    #####:  153:      break;
+        -:  154:    }
+    #####:  155:    tmpNode = tmpNode -> down;
+        -:  156:  } // get from page
+    #####:  157:  tmpNode = list_hd;
+    #####:  158:  while(tmpNode != NULL){
+    #####:  159:    if (compareString(tmpNode -> name, page2)){
+    #####:  160:      toPage = tmpNode;
+    #####:  161:      break;
+        -:  162:    }
+    #####:  163:    tmpNode = tmpNode -> down;
+        -:  164:  } // get to page
+    #####:  165:  if (fromPage -> visited){
+    #####:  166:    return 0;
+        -:  167:  }
+    #####:  168:  fromPage -> visited = 1;
+    #####:  169:  struct link *nextLink = malloc(sizeof(struct link));
+    #####:  170:  nextLink = fromPage -> links;
+    #####:  171:  while(nextLink != NULL){
+    #####:  172:    if (Dfs(nextLink -> pages, toPage)){
+    #####:  173:      return 1;
+        -:  174:    }
+    #####:  175:    nextLink = nextLink -> next;
+        -:  176:  }
+    #####:  177:  return 0;
+    #####:  178:}
+        -:  179:
+        -:  180:int main(int argc, char *argv[]){
+    #####:  181:  char *line = NULL;
+    #####:  182:  size_t len = 0;
+    #####:  183:  while(getline(&line, &len, stdin) != EOF){
+    #####:  184:    char *linePtr = line;
+        -:  185:    int offset;
+        -:  186:    char string[65];
+    #####:  187:    if (sscanf(linePtr, "%s %n", string, &offset) == 1){
+    #####:  188:      linePtr += offset;
+    #####:  189:      if (getCommand(string) == 1){
+    #####:  190:        while (sscanf(linePtr, "%s %n", string, &offset) == 1){
+    #####:  191:          addPages(string);
+    #####:  192:          linePtr += offset;
+        -:  193:        }
+    #####:  194:      }else if(getCommand(string) == 2){
+    #####:  195:        char *sourcePage = NULL;
+    #####:  196:        if (sscanf(linePtr, "%s %n", string, &offset) == 1){
+    #####:  197:          sourcePage = strdup(string);
+    #####:  198:          linePtr+=offset;
+    #####:  199:        }
+    #####:  200:        while (sscanf(linePtr, "%s %n", string, &offset) == 1){
+    #####:  201:          connectPages(sourcePage, string);
+    #####:  202:          linePtr += offset;
+        -:  203:        }
+    #####:  204:      }else if(getCommand(string) == 3){
+    #####:  205:        char *page1 = NULL, *page2 = NULL;
+    #####:  206:        if (sscanf(linePtr, "%s %n", string, &offset) == 1){
+    #####:  207:          page1 = strdup(string);
+    #####:  208:          linePtr += offset;
+    #####:  209:        }
+    #####:  210:        if (sscanf(linePtr, "%s %n", string, &offset) == 1){
+    #####:  211:          page2 = strdup(string);
+    #####:  212:        }
+    #####:  213:        setVisit();
+    #####:  214:        printf("%d\n", dfs(page1, page2));
+    #####:  215:      }
+    #####:  216:    }
+        -:  217:  }
+        -:  218:  /*printf("head: %s\n", list_hd -> down -> down -> down -> down ->name);
+        -:  219:  printf("head: %s\n", list_hd -> down -> down -> down -> down -> links -> pages -> name);
+        -:  220:  printf("head: %s\n", list_hd -> down -> down -> down -> down -> links -> next -> pages -> name);
+        -:  221:  printf("head: %s\n", list_hd -> down -> down -> down -> down -> links -> next -> next -> pages -> name);
+        -:  222:  //printf("%s\n", list_hd -> links -> pages -> name);
+        -:  223:  //printf("%s\n", list_hd -> links -> next -> pages -> name);
+        -:  224:  //printf("%s\n", list_hd -> links -> next -> next ->pages -> name);*/
+    #####:  225:}

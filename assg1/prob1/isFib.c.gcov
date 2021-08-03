@@ -1,0 +1,67 @@
+        -:    0:Source:isFib.c
+        -:    0:Graph:isFib.gcno
+        -:    0:Data:isFib.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2:* File: isFib.c
+        -:    3:* Author: wentao zhou
+        -:    4:* Purpose: define a function to determine if all the numbers
+        -:    5:* are Fibonacci number
+        -:    6:*
+        -:    7:*/
+        -:    8:
+        -:    9:
+        -:   10:# include<stdio.h>
+        -:   11:# include <stdlib.h>
+        -:   12:
+        -:   13:/*
+        -:   14:* main() -- go through the all the input integers and determine and print out
+        -:   15:* the fib number. it assumes that the input integers are all positive and not
+        -:   16:* too large to fit into a type int.
+        -:   17:*/
+        -:   18:int main(){
+        -:   19:  int firstFib, secondFib,sumFib;
+        -:   20:  int input;
+        1:   21:  int checkInput = scanf("%d",&input);
+        1:   22:  int gotError = 0; // as a boolean to see if it meets a error
+        4:   23:  while(checkInput != EOF) {
+        1:   24:      if (checkInput == 0){ // non-integer input
+    #####:   25:        fprintf(stderr, "non-integer input\n");
+    #####:   26:        exit(1);
+        -:   27:      }
+        1:   28:      if (input <= 0){ // non-positive input
+    #####:   29:        fprintf(stderr, "invalid input, it should be positive integers\n");
+    #####:   30:        gotError = 1;
+    #####:   31:      }else{
+        1:   32:      firstFib = 1;
+        1:   33:      secondFib = 1;
+        1:   34:      sumFib = firstFib + secondFib;
+        -:   35:      // check the initial value
+        1:   36:      if (input == firstFib || input == secondFib || input == sumFib){
+        1:   37:        printf("%d is fib\n", input);
+        1:   38:      }else{
+    #####:   39:        while(sumFib <= input){
+    #####:   40:          if (input == firstFib || input == secondFib || input == sumFib){
+    #####:   41:            printf("%d is fib\n", input);
+    #####:   42:            break;
+        -:   43:          }else{ // go to next
+    #####:   44:            firstFib = secondFib;
+    #####:   45:            secondFib = sumFib;
+    #####:   46:            sumFib = firstFib + secondFib;
+        -:   47:            }
+        -:   48:          }
+        -:   49:        }
+        -:   50:        // checkfirstFib, secondFib, sumFib
+        1:   51:        if(!(input == firstFib || input == secondFib || input == sumFib)){
+    #####:   52:          printf("%d is not fib\n", input);
+    #####:   53:        }
+        -:   54:      }
+        1:   55:      checkInput = scanf("%d",&input);
+        -:   56:    }
+        1:   57:  if (gotError){
+    #####:   58:    exit(1);
+        -:   59:  }else{
+        1:   60:    exit(0);
+        -:   61:  }
+    #####:   62:}

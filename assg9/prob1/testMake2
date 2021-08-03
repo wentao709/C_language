@@ -1,0 +1,5 @@
+f1: f2 f3
+	gcc -Wall -c file2.c
+	gcc -Wall -c file.c
+f2: f3 f4
+f4 :f5 f6

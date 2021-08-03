@@ -1,0 +1,9 @@
+@addPages @addPages 8 1 6 3 4
+@addLinks 3 6 1 8
+@addLinks  
+@addLinks @addPages 1
+@isConnected 3 6
+@isConnected 6 1
+@isConnected 1 4
+@isConnected 1 1
+@isConnected @addPages 1

@@ -1,0 +1,3 @@
+hash.o : hash.c utils.h hash.h
+	gcc -Wall hash.c
+spellcheck : hash.o
